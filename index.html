@@ -1,0 +1,266 @@
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: sans-serif;
+      margin: 0;
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      background: linear-gradient(-45deg, #1d161b, #3e2768, #580e83, #a87196);
+      background-size: 400% 400%;
+      animation: background_gradient 30s ease infinite;
+    }
+
+    .main {
+      flex-grow: 1;
+      padding: 20px;
+      text-align: center;
+      overflow-y: auto;
+      position: relative;
+      width: 100%;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 1rem;
+      background-color: #b65c7a;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      margin: 10px;
+    }
+
+    button:hover {
+      background-color: #ff4d88;
+    }
+
+    #reason {
+      color: white;
+      font-size: 1.2rem;
+      margin: 20px 0;
+    }
+
+
+    @keyframes background_gradient {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    #list_toggle_button {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background-color: rgba(255, 255, 255, 0.1);
+      font-size: 1.2rem;
+      padding: 12px 16px;
+      z-index: 10;
+      border-radius: 50%;
+    }
+
+    #reason_list {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 80%;
+      max-width: 300px;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.8);
+      color: white;
+      overflow-y: auto;
+      padding: 20px;
+      transform: translateX(-100%);
+      transition: transform 0.3s ease;
+      z-index: 9;
+    }
+
+    #reason_list.show {
+      transform: translateX(0);
+    }
+
+    #reason_list h3 {
+      margin-top: 0;
+      font-size: 1.1rem;
+      text-align: center;
+    }
+
+    #reason_list ul {
+      padding: 0;
+      list-style: none;
+      font-size: 0.95rem;
+    }
+
+    #reason_list ul li {
+      margin-bottom: 10px;
+    }
+
+  </style>
+</head>
+<body>
+  <div id="reason_list">
+    <div id="unlocked_list"></div>
+  </div>
+  <div class="main">
+    <button id="list_toggle_button" onclick="toggle_reason_list()">☰</button>
+    <div id="reason">click me :3</div>
+    <button onclick="show_new_reason()">❤︎</button>
+  </div>
+
+  <script>
+    const reasons = [
+      "1. your voice is so soothing and calming",
+      "2. you have a unique and incredible personality",
+      "3. you are mature (yes other girls at or near your age are not mature at all)",
+      "4. you know how to cook",
+      "5. literally the perfect house wife",
+      "6. you know how to take care of a child",
+      "7. you brighten my mood just by talking to me",
+      "8. your music taste is just like mine, perfect",
+      "9. your eyes look so beautiful; id rather look at them than to look at a museum art piece",
+      "10. you are the only person that can make me feel safe",
+      "11. you are genuinely smart",
+      "12. you actually make me smile and laugh",
+      "13. your lips are so beautiful and kissable",
+      "14. your smile makes me feel so happy every time i look at it",
+      "15. you are the only thing i need in my life",
+      "16. your style is so cool",
+      "17. you are the best val player and coach",
+      "18. your face looks so cute and kissable i want to fill it w kisses",
+      "19. your hands look so soft i want to hold them forever",
+      "20. you actually make me feel loved",
+      "21. you mean everything to me",
+      "22. you are literally my wife, girlfriend and best friend",
+      "23. you are very special to me and worth 100% of my time",
+      "24. everything about you is so unique and perfect; you dont remind me of anyone",
+      "25. you are a very kind person",
+      "26. we have almost everything in common",
+      "27. you are literally the girl version of me",
+      "28. you are so creative",
+      "29. you are so talented at drawing",
+      "30. your handwriting is as beautiful as you",
+      "31. getting notifications from you makes me the happiest",
+      "32. i love when you call me sweet things like love/baby/your good boy/husband",
+      "33. i love that you are patient with me",
+      "34. i love how trustworthy you are",
+      "35. i love how you have never judged me",
+      "36. i love how understanding you are",
+      "37. i love waking up to your messages",
+      "38. i love that you genuinely see a future with me",
+      "39. i love how incomparable you are",
+      "40. i love how perfect you are; even beyond perfect actually",
+      "41. i love how we like the same things",
+      "42. i love how well you understand me",
+      "43. i love how cute your nose looks",
+      "44. i love how good you are at every single thing you do",
+      "45. i love how you put me on so many songs",
+      "46. i would actually die without you",
+      "47. you are MY amazing beautiful gorgeous attractive breath takingly pretty and charming and stunning and hot and sexy wife",
+      "48. i love how we are undoubtedly made for eachother",
+      "49. i love how cute we are together",
+      "50. i love your presence",
+      "51. i love hearing your voice",
+      "52. i love going to sleep thinking about you, dreaming about you, and waking up thinking about you",
+      "53. i love looking at your pics first thing after waking up",
+      "54. i love playing with you",
+      "55. i love how funny you are",
+      "56. i love your cute and soft tummy",
+      "57. i love when you say all of those sweet things to me in spanish",
+      "58. i love when you are happy",
+      "59. i love when you voice msg me all those cute things",
+      "60. i love the way you dress",
+      "61. i love the way you look",
+      "62. i love how beautiful you look even without makeup",
+      "63. i love listening to music with you",
+      "64. i love when you let me pick what to wear for you",
+      "65. i love when you tell me good night",
+      "66. i love when you send me photos of your face",
+      "67. i love when you talk about thinks you like",
+      "68. i love hearing you giggle and laugh",
+      "69. i love that you always respond and never ghost me",
+      "70. i love how you think about me",
+      "71. i love how good you are at blade ball",
+      "72. i love how good your aim is",
+      "73. you make me feel like the luckiest man ever",
+      "74. i love the cute posts and reels u send me",
+      "75. i love how i could talk with you forever and not get bored of you",
+      "76. i love how you made my life better since you came into it",
+      "77. i love how you show me more love than anybody ever could",
+      "78. your hair looks so cute",
+      "79. you make me feel so special and loved",
+      "80. i love how cute you are when you say sweet things to me",
+      "81. i love how we both like spicy foods",
+      "82. i love doing anything together with you",
+      "83. i love how cute your eyebrows look",
+      "84. i love how you are literally everything ive ever wanted",
+      "85. i love how easy i fall asleep knowing you told me goodnight",
+      "86. i love how better i sleep knowing you're mine and i'm yours",
+      "87. i really really really really love your eyes",
+      "88. i love you even more every day",
+      "89. i feel very happy when you tell me that you love me",
+      "90. i love how you actually make your own fits instead of going on those avatar outfit games and steal fits from there",
+      "91. i feel so happy when ur around even if im bored or sad",
+      "92. i love how cute you sound",
+      "93. i love how i have fun on games i dont like playing just because im playing with you",
+      "94. i love the heart shaped vein you have on your hand",
+      "95. i love how the reels u send me are actually funny",
+      "96. i love how you put me on so many songs i forgot again",
+      "97. i think its really cute when u send me pics of ur food as if u were sharing it w me",
+      "98. i love how different you are even when you say that you are basic",
+      "99. i love how we complete each other",
+      "100. i love how we have matching scents"
+    ]
+
+    function get_stored_reasons() {
+      return JSON.parse(localStorage.getItem("reasons") || "[]");
+    }
+    function store_reason(reason) {
+      const stored_reasons = get_stored_reasons();
+      stored_reasons.push(reason);
+      localStorage.setItem("reasons", JSON.stringify(stored_reasons));
+    }
+    function update_reason_list() {
+      const container = document.getElementById("unlocked_list");
+      const stored_reasons = get_stored_reasons();
+
+      stored_reasons.sort((a, b) => {
+        const a_num = parseInt(a.split(".")[0], 10);
+        const b_num = parseInt(b.split(".")[0], 10);
+        return a_num - b_num;
+      });
+
+      container.innerText = stored_reasons.join("\n\n");
+    }
+
+
+    function show_new_reason() {
+      const stored_reasons = get_stored_reasons();
+      const remaining_reasons = reasons.filter(r => !stored_reasons.includes(r));
+
+      if (remaining_reasons.length === 0) {
+        document.getElementById("reason").innerText = "i love everything about you, i love everything you do, i love you beyond your body, and most importantly i love you for you. and these 100 reasons arent the only ones, if i was able to write a million reasons for why i love you in just one night i would. ive actually never loved anyone this much and you actually and really mean alot to me\n\ni love you ♡\n  - your husband, edi";
+        return;
+      }
+
+      const random_reason = remaining_reasons[Math.floor(Math.random() * remaining_reasons.length)];
+      document.getElementById("reason").innerText = random_reason;
+      store_reason(random_reason);
+      update_reason_list();
+    }
+
+    function toggle_reason_list() {
+      const panel = document.getElementById("reason_list");
+      panel.classList.toggle("show");
+    }
+
+    update_reason_list();
+  </script>
+</body>
+</html>
